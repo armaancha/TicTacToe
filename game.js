@@ -10,7 +10,38 @@ printArray = () => {
   x.forEach((item) => console.log(item[0] + " " + item[1] + " " + item[2]));
 }
 
-playerMove = (p, isBot) => {
+checkLine = (l, p) => {
+  let cCount = 0;
+  let dashCount = 0;
+  let c = p===1 ? 'X' : 'O'
+  let position = -1;
+  for(i=0;i<l.length;i++) {
+    if(l[i]==='-') {
+      dashCount++;
+      position = i;
+    }
+    else if(l[i]===c) {
+      cCount++;
+    }
+  }
+  if(dashCount===1 && cCount ===2){
+    return position;
+  }
+  return -1;
+}
+
+tryToWin = (p) => {
+  let result = checkLine([x[0][0],x[0][1], x[0][2]], p);
+  if(result!=-1){
+    return({
+      r:0,
+      c:result
+    })
+  }
+  
+}
+
+playerMove = (p, isBot, difficulty) => {
   let r = 0;
   let c = 0;
   if(!isBot) {
@@ -18,8 +49,13 @@ playerMove = (p, isBot) => {
     c = prompt("Player " + p + " select column.")-1;
   }
   else {
-    r = Math.floor(Math.random() * 3);
-    c = Math.floor(Math.random() * 3);
+    if(difficulty===0) {
+      r = Math.floor(Math.random() * 3);
+      c = Math.floor(Math.random() * 3);
+    }
+    else {
+      tryToWin(p)
+    }
   }
 
   if (r > 2 || c > 2) {
@@ -71,11 +107,15 @@ playGame = () => {
   let option = prompt("0 for no player, 1 for singleplayer, 2 for multiplayer ");
   let player1Bot = option === "0" ? true : false;
   let player2Bot = option === "0" || "1" ? true : false;
+  let difficulty = 0;
+  if(player1Bot || player2Bot) {
+    difficulty = parseInt(prompt("0 for easy, 1 for hard"));
+  }
   printArray();
   while (true) {
-    playerMove(1, player1Bot);
+    playerMove(1, player1Bot, difficulty);
     if(checkWin(1) || checkDraw()) { break };
-    playerMove(2, player2Bot);
+    playerMove(2, player2Bot, difficulty);
     if(checkWin(2) || checkDraw()) { break };
   }
 }
