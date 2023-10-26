@@ -10,7 +10,7 @@ printArray = () => {
   x.forEach((item) => console.log(item[0] + " " + item[1] + " " + item[2]));
 }
 
-checkLine = (l, p) => {
+checkLineWorker = (l, p) => {
   let cCount = 0;
   let dashCount = 0;
   let c = p===1 ? 'X' : 'O'
@@ -30,15 +30,67 @@ checkLine = (l, p) => {
   return -1;
 }
 
-tryToWin = (p) => {
-  let result = checkLine([x[0][0],x[0][1], x[0][2]], p);
-  if(result!=-1){
-    return({
-      r:0,
-      c:result
-    })
+checkLine = (p, type, index) => {
+  let c = p===1 ? 'X' : 'O'
+  let result = -1;
+  let position;
+  switch(type) {
+    case "row":
+      result = checkLineWorker([x[index][0],x[index][1], x[index][2]], p);
+      position = {
+        r:index,
+        c:result
+      };
+      break;
+    case "column":
+      result = checkLineWorker([x[0][index],x[1][index], x[2][index]], p);
+      position = {
+        r:result,
+        c:index
+      };
+      break;
+    case "diagonal":
+      switch(index) {
+        case 0:
+          result = checkLineWorker([x[0][0],x[1][1], x[2][2]], p);
+          position = {
+            r:result,
+            c:result
+          };
+          break;
+        case 1:
+          result = checkLineWorker([x[0][2],x[1][1], x[2][0]], p);
+          let col = 2-result;
+          position = {
+            r:result,
+            c:col
+          }
+          break;
+        default:
+          break;
+      }
+    default:
+      break;
   }
-  
+  if(result!=-1){
+    x[position.r][position.c] = c;
+    return true;
+  }
+  return false;
+}
+
+tryToWin = (p) => {
+  if(checkLine(p, "row", 0) ||
+    (checkLine(p, "row", 1) || 
+    (checkLine(p, "row", 2) ||
+    (checkLine(p, "column", 0) ||
+    (checkLine(p, "column", 1) ||
+    (checkLine(p, "column", 2) ||
+    (checkLine(p, "diagonal", 0) ||
+    (checkLine(p, "diagonal", 1)) {
+    return true;
+  }
+  return false;
 }
 
 playerMove = (p, isBot, difficulty) => {
@@ -54,13 +106,16 @@ playerMove = (p, isBot, difficulty) => {
       c = Math.floor(Math.random() * 3);
     }
     else {
-      tryToWin(p)
+      if(tryToWin(p)) {
+        return;
+      }
+      
     }
   }
 
   if (r > 2 || c > 2) {
     console.log("Invalid Move.");
-    playerMove(p, isBot);
+    playerMove(p, isBot, difficulty;
     return;
   }
   if (x[r][c] === '-') {
@@ -72,7 +127,7 @@ playerMove = (p, isBot, difficulty) => {
   if (!isBot) {
     console.log("Sorry, spot is taken.");
   }
-  playerMove(p, isBot);
+  playerMove(p, isBot,difficulty);
 }
 
 checkWin = (p) => {
