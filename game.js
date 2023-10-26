@@ -80,14 +80,14 @@ checkLine = (p, type, index) => {
 }
 
 tryToWin = (p) => {
-  if(checkLine(p, "row", 0) ||
-    (checkLine(p, "row", 1) || 
-    (checkLine(p, "row", 2) ||
-    (checkLine(p, "column", 0) ||
-    (checkLine(p, "column", 1) ||
-    (checkLine(p, "column", 2) ||
-    (checkLine(p, "diagonal", 0) ||
-    (checkLine(p, "diagonal", 1)) {
+  if((checkLine(p, "row", 0)) ||
+    (checkLine(p, "row", 1)) || 
+    (checkLine(p, "row", 2)) ||
+    (checkLine(p, "column", 0)) ||
+    (checkLine(p, "column", 1)) ||
+    (checkLine(p, "column", 2)) ||
+    (checkLine(p, "diagonal", 0)) ||
+    (checkLine(p, "diagonal", 1))) {
     return true;
   }
   return false;
@@ -115,7 +115,7 @@ playerMove = (p, isBot, difficulty) => {
 
   if (r > 2 || c > 2) {
     console.log("Invalid Move.");
-    playerMove(p, isBot, difficulty;
+    playerMove(p, isBot, difficulty);
     return;
   }
   if (x[r][c] === '-') {
